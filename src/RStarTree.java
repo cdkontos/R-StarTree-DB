@@ -15,4 +15,7 @@ public class RStarTree {
     {
         return ROOT_NODE_BLOCK_ID;
     }
+    static int getLeafLevel() {
+        return LEAF_LEVEL;
+    }
 }

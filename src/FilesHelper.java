@@ -334,7 +334,7 @@ public class FilesHelper {
 
             // Create a random leaf entry with bounds and child node ID
             Entry entry1 = new LeafEntry(new Random().nextLong(), new Random().nextLong(), boundsForEachDimension);
-            entry1.setChildNodeBlockId(new Random().nextLong());
+            entry1.setChildNodeBlockID(new Random().nextLong());
 
             // Serialize the entry into bytes
             byte[] nodeInBytes = new byte[0];
