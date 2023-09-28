@@ -2,9 +2,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Node implements Serializable {
-    private static final int MAX_ENTRIES = 1; //TODO ADD FILES
+    private static final int MAX_ENTRIES = FilesHelper.calculateMaxEntriesInNode();
     private static final int MIN_ENTRIES = (int) (0.4 * MAX_ENTRIES);
-    private final int level;
+    private int level;
     private long blockID;
     private ArrayList<Entry> entries;
 
@@ -61,7 +61,7 @@ public class Node implements Serializable {
     {
         ArrayList<Distribution> axisDistributions = new ArrayList<>();
         double splitAxisPerimeterSum = Double.MAX_VALUE;
-        for (int i = 0; i < 1; i++) //TODO ADD FILES
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
             ArrayList<Entry> entriesUpperSort = new ArrayList<>();
             ArrayList<Entry> entreisLowerSort = new ArrayList<>();

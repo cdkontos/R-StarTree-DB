@@ -41,7 +41,7 @@ public class BoundingBox implements Serializable {
     private double calcArea()
     {
         double product = 1;
-        for (int i = 0; i < 1; i++) //TODO ADD FILES
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
             product = product * (bounds.get(i).getUpper() - bounds.get(i).getLower());
         }
@@ -50,7 +50,7 @@ public class BoundingBox implements Serializable {
     private double calcPerimeter()
     {
         double sum = 0;
-        for (int i = 0; i < 1; i++) //TODO ADD FILES
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
             sum += abs(bounds.get(i).getUpper() - bounds.get(i).getLower());
         }
@@ -59,7 +59,7 @@ public class BoundingBox implements Serializable {
     private ArrayList<Double> calcCenter()
     {
         ArrayList<Double> centers = new ArrayList<>();
-        for (int i = 0; i < 1; i++) //TODO ADD FILES
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
             centers.add((bounds.get(i).getUpper() + bounds.get(i).getLower())/2);
         }
@@ -74,7 +74,7 @@ public class BoundingBox implements Serializable {
     {
         double minDist = 0;
         double rd;
-        for (int i = 0; i < 1; i++) //TODO ADD FILES
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
             if(getBounds().get(i).getLower() > point.get(i))
             {
@@ -94,7 +94,7 @@ public class BoundingBox implements Serializable {
 
     static boolean checkBoxOverlap(BoundingBox boundingBoxA, BoundingBox boundingBoxB)
     {
-        for (int i = 0; i < 1; i++) //TODO ADD FILES
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
             double overlapD = Math.min(boundingBoxA.getBounds().get(i).getUpper(), boundingBoxB.getBounds().get(i).getUpper())
                     - Math.max(boundingBoxA.getBounds().get(i).getLower(),boundingBoxB.getBounds().get(i).getLower());
@@ -110,7 +110,7 @@ public class BoundingBox implements Serializable {
     static double calcOverlapVal(BoundingBox boundingBoxA, BoundingBox boundingBoxB)
     {
         double overlapVal = 1;
-        for (int i = 0; i < 1; i++) //TODO ADD FILES
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
             double overlapD = Math.min(boundingBoxA.getBounds().get(i).getUpper(), boundingBoxB.getBounds().get(i).getUpper())
                     - Math.max(boundingBoxA.getBounds().get(i).getLower(),boundingBoxB.getBounds().get(i).getLower());
@@ -128,7 +128,7 @@ public class BoundingBox implements Serializable {
     static double findBoundBoxDist(BoundingBox boundingBoxA, BoundingBox boundingBoxB)
     {
         double dist = 0;
-        for (int i = 0; i < 1; i++) //TODO ADD FILES
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
             dist += Math.pow(boundingBoxA.getCenter().get(i) - boundingBoxB.getCenter().get(i),2);
         }

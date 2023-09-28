@@ -3,8 +3,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Bounds implements Serializable {
-    private final double lower;
-    private final double upper;
+    private double lower;
+    private double upper;
 
     public Bounds(double lower, double upper) {
         if(lower<=upper)
@@ -27,7 +27,7 @@ public class Bounds implements Serializable {
     static ArrayList<Bounds> findMinBounds(ArrayList<Entry> entries)
     {
         ArrayList<Bounds> minBounds = new ArrayList<>();
-        for (int i=0; i < 1 ; i++) //TODO ADD FILES
+        for (int i=0; i < FilesHelper.getDataDimensions() ; i++)
         {
             Entry lowerEntry = Collections.min(entries, new EntryCompare.EntryBoundCompare(entries,i,false));
             Entry upperEntry = Collections.max(entries, new EntryCompare.EntryBoundCompare(entries,i,true));
@@ -39,7 +39,7 @@ public class Bounds implements Serializable {
     static ArrayList<Bounds> findMinBounds(BoundingBox boundingBoxA, BoundingBox boundingBoxB)
     {
         ArrayList<Bounds> minBounds = new ArrayList<>();
-        for (int i = 0; i < 1; i++) //TODO ADD FILES
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
             double lower = Math.min(boundingBoxA.getBounds().get(i).getLower(), boundingBoxB.getBounds().get(i).getLower());
             double upper = Math.max(boundingBoxA.getBounds().get(i).getUpper(), boundingBoxB.getBounds().get(i).getUpper());
