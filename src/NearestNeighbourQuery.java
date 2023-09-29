@@ -8,6 +8,7 @@ class NearestNeighbourQuery extends Query {
     private int k; // The number of nearest neighbors to be found
     private PriorityQueue<IdDistancePair> nearestNeighbours; // Using a max heap for the nearest neighbors
 
+    // Constructor initializes the query with the search point and the number of neighbors to find
     NearestNeighbourQuery(ArrayList<Double> searchPoint, int k) {
         if (k < 0)
             throw new IllegalArgumentException("Parameter 'k' for the nearest neighbors must be a positive integer.");
@@ -19,7 +20,7 @@ class NearestNeighbourQuery extends Query {
         });
     }
 
-    // Returns the IDs of the query's records.
+    // Returns the IDs of the query's records
     @Override
     ArrayList<Long> getQueryRecordIds(Node node) {
         ArrayList<Long> qualifyingRecordIds = new ArrayList<>();
@@ -28,14 +29,14 @@ class NearestNeighbourQuery extends Query {
             IdDistancePair recordDistancePair = nearestNeighbours.poll();
             qualifyingRecordIds.add(recordDistancePair.getRecordId());
         }
-        Collections.reverse(qualifyingRecordIds); // In order to return the closest neighbors first instead of the farthest
+        // Reverse the list to return the closest neighbors first instead of the farthest.
+        Collections.reverse(qualifyingRecordIds);
         return qualifyingRecordIds;
     }
 
-    // Finds the nearest neighbors by using a branch and bound algorithm
-    // with the help of the RStarTree.
+    // Finds the nearest neighbors by using a branch and bound algorithm with the use of the R* tree
     private void findNeighbours(Node node) {
-        node.getEntries().sort(new EntryComparator.EntryDistanceFromPointComparator(node.getEntries(), searchPoint));
+        node.getEntries().sort(new EntryCompare.EntryDistanceFromPointCompare(node.getEntries(), searchPoint));
         int i = 0;
         if (node.getLevel() != RStarTree.getLeafLevel()) {
             while (i < node.getEntries().size() && (nearestNeighbours.size() < k || node.getEntries().get(i).getBoundingBox().findMinPointDistance(searchPoint) <= searchPointRadius)) {

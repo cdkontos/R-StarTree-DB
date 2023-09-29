@@ -1,5 +1,7 @@
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
+    public static void main(String[] args){
+        boolean reconstructingTree = UserInterface.startApplication();
+        RStarTree rStarTree = new RStarTree(reconstructingTree);
+        UserInterface.runApplication(rStarTree);
     }
 }

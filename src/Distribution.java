@@ -1,6 +1,6 @@
 public class Distribution {
-    private final DistributionGroup firstGroup;
-    private final DistributionGroup secondGroup;
+    private  DistributionGroup firstGroup;
+    private  DistributionGroup secondGroup;
 
     public Distribution(DistributionGroup firstGroup, DistributionGroup secondGroup) {
         this.firstGroup = firstGroup;

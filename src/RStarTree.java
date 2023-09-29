@@ -226,4 +226,20 @@ public class RStarTree {
             insert(null,null,removedEntry,childN.getLevel());
         }
     }
+
+    // Query which returns the ids of the Records that are inside the given searchBoundingBox
+    ArrayList<Long> getBoundingBoxData(BoundingBox searchBoundingBox){
+        Query query = new BoundingBoxRangeQuery(searchBoundingBox);
+        return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
+    }
+
+    // Query which returns the ids of the K Records that are closer to the given point
+    ArrayList<Long> getNearestNeighbours(ArrayList<Double> searchPoint, int k){
+        Query query = new NearestNeighbourQuery(searchPoint,k);
+        return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
+    }
+
+
+
+
 }
