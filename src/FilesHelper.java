@@ -179,26 +179,26 @@ public class FilesHelper {
                 updateMetaDataBlock(PATH_TO_DATAFILE);
 
                 // Create a list to hold record bytes for the current block
-                List<byte[]> blockRecords = new ArrayList<>();
+                ArrayList<Record> blockRecords = new ArrayList<>();
                 BufferedReader csvReader = new BufferedReader(new FileReader(PATH_TO_CSV)); // BufferedReader used to read the data from the CSV file
                 String stringRecord; // String used to read each line (row) of the CSV file
                 int maxRecordsInBlock = calculateMaxRecordsInBlock();
 
                 while ((stringRecord = csvReader.readLine()) != null) {
-                    byte[] recordBytes = stringRecord.getBytes(); // Convert the CSV record to bytes
+                    //byte[] recordBytes = stringRecord.getBytes(); // Convert the CSV record to bytes
 
                     if (blockRecords.size() == maxRecordsInBlock) {
                         // Write the block to the data file
-                        writeDataFileBlock(PATH_TO_DATAFILE, blockRecords);
+                        writeDataFileBlock(blockRecords);
                         blockRecords = new ArrayList<>();
                     }
-                    blockRecords.add(recordBytes);
+                    blockRecords.add(new Record(stringRecord));
                 }
                 csvReader.close();
 
-                if (!blockRecords.isEmpty()) {
+                if (blockRecords.size() > 0) {
                     // Write the remaining records as the final block
-                    writeDataFileBlock(PATH_TO_DATAFILE, blockRecords);
+                    writeDataFileBlock(blockRecords);
                 }
             }
         } catch (Exception e) {
@@ -231,7 +231,7 @@ public class FilesHelper {
     }
 
     // Used for writing and saving an array of records as a new block of bytes in the datafile
-    static void writeDataFileBlock(String dataFilePath, List<byte[]> records) {
+    static void writeDataFileBlock(ArrayList<Record> records) {
         try {
 
             // Serialize the list of records and its length to bytes
@@ -248,17 +248,17 @@ public class FilesHelper {
             System.arraycopy(recordInBytes, 0, block, goodPutLengthInBytes.length, recordInBytes.length);
 
             // Open the data file in append mode
-            FileOutputStream fos = new FileOutputStream(dataFilePath, true);
+            FileOutputStream fos = new FileOutputStream(PATH_TO_DATAFILE, true);
             BufferedOutputStream bout = new BufferedOutputStream(fos);
 
             // Write the block to the data file
             bout.write(block);
 
-            bout.close();
-            fos.close();
+            //bout.close();
+            //fos.close();
 
             // Update metadata block in the data file
-            updateMetaDataBlock(dataFilePath);
+            updateMetaDataBlock(PATH_TO_DATAFILE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -335,7 +335,7 @@ public class FilesHelper {
             // Create a random leaf entry with bounds and child node ID
             Entry entry1 = new LeafEntry(new Random().nextLong(), new Random().nextLong(), boundsForEachDimension);
             entry1.setChildNodeBlockID(new Random().nextLong());
-
+            randomEntries.add(entry1);
             // Serialize the entry into bytes
             byte[] nodeInBytes = new byte[0];
             byte[] goodPutBytes = new byte[0];

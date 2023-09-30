@@ -10,15 +10,17 @@ public class RStarTree {
     private static final int CHOOSE_SUBTREE_P_ENTRIES = 32;
     private static final int REINSERT_P_ENTRIES = (int) (0.30 * Node.getMaxEntries());
 
-    RStarTree(boolean insertRecords)
+    public RStarTree(boolean insertRecords)
     {
         this.totalLevels = FilesHelper.getTotalLevelsOfTreeIndex();
         if(insertRecords)
         {
             FilesHelper.writeNewIndexFileBlock(new Node(1));
 
-            for (int i = 0; i < FilesHelper.getTotalBlocksInDatafile(); i++)
+            System.out.println(FilesHelper.getTotalBlocksInDatafile());
+            for (int i = 1; i < FilesHelper.getTotalBlocksInDatafile(); i++)
             {
+                System.out.println(i);
                 ArrayList<Record> records = FilesHelper.readDataFileBlock(i);
                 if(records!=null)
                 {
@@ -238,8 +240,39 @@ public class RStarTree {
         Query query = new NearestNeighbourQuery(searchPoint,k);
         return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
     }
+/*
+    private void deleteRecord(Record record, long datafileBlockId)
+    {
+        ArrayList<Bounds> bounds = new ArrayList<>();
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
+        {
+            bounds.add(new Bounds(record.getCoordinate(i),record.getCoordinate(i)));
+        }
+        levelsInserted = new boolean[totalLevels];
 
+    }
 
+    private Node findLeaf(Entry entry, Node node)
+    {
+        ArrayList<Entry> entries = node.getEntries();
+        if(node.getLevel() != LEAF_LEVEL)
+        {
+            for (Entry entry1 : entries)
+            {
+                if(BoundingBox.checkBoxOverlap(entry1.getBoundingBox(),entry.getBoundingBox()))
+                {
+                    Node child = FilesHelper.readIndexFileBlock(entry1.getChildNodeBlockID());
+                    findLeaf(entry1,child);
+                }
+            }
+        }
+        else
+        {
+
+        }
+    }
+
+*/
 
 
 }
