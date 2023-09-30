@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Node implements Serializable {
     private static final int MAX_ENTRIES = FilesHelper.calculateMaxEntriesInNode();
@@ -7,6 +8,7 @@ public class Node implements Serializable {
     private int level;
     private long blockID;
     private ArrayList<Entry> entries;
+    private Long childNodeBlockID;
 
     public Node(int level) {
         this.level = level;
@@ -30,6 +32,28 @@ public class Node implements Serializable {
 
     public int getLevel() {
         return level;
+    }
+
+    public boolean isLeaf() {
+        return level == RStarTree.getLeafLevel();
+    }
+
+    void setChildNodeBlockID(Long childNodeBlockID) {
+        this.childNodeBlockID = childNodeBlockID;
+    }
+
+    public Long getChildNodeBlockID() {
+        return childNodeBlockID;
+    }
+
+    public Node getChildNode(Map<Long, Node> nodeMap) {
+        if (nodeMap != null && nodeMap.containsKey(childNodeBlockID)) {
+            // Retrieve and return the Node object from the map based on childNodeBlockID
+            return nodeMap.get(childNodeBlockID);
+        } else {
+            // Return null or handle the case where the Node is not found
+            return null;
+        }
     }
 
     public long getBlockID()

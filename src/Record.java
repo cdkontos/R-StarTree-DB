@@ -42,5 +42,31 @@ class Record implements Serializable {
             recordToString.append(",").append(coordinates.get(i));
         return String.valueOf(recordToString);
     }
+
+    boolean dominates(Record other) {
+        if (other == null) {
+            return false; // Handle the case where 'other' is null
+        }
+
+        boolean isBetterInSomeDimension = false;
+
+        for (int dimension = 0; dimension < coordinates.size(); dimension++) {
+            double thisCoordinate = coordinates.get(dimension);
+            double otherCoordinate = other.getCoordinate(dimension);
+
+            if (thisCoordinate > otherCoordinate) {
+                // 'this' is better in this dimension
+                isBetterInSomeDimension = true;
+            } else if (thisCoordinate < otherCoordinate) {
+                // 'this' is worse in this dimension
+                return false; // 'this' does not dominate 'other'
+            }
+            // If thisCoordinate == otherCoordinate, they are equal in this dimension, continue to the next dimension
+        }
+
+        return isBetterInSomeDimension;
+    }
+
+
 }
 
