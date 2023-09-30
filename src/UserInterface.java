@@ -73,7 +73,7 @@ class UserInterface {
             // Selecting the type of query
             switchLabel:
             while (true) {
-                System.out.println("Query Options: 1) Search for Records that overlap with a given bounding box, 2) Search for Records that overlap with a given circle, 3) K-NN or 0) To Exit");
+                System.out.println("Query Options: 1) Search for Records that overlap with a given bounding box, 2) Skyline, 3) K-NN or 0) To Exit");
                 System.out.print("Select the type of query to execute: ");
                 querySelection = scan.nextLine().trim().toLowerCase();
                 System.out.println();
@@ -125,7 +125,7 @@ class UserInterface {
                         break switchLabel;
                     case "2":
                         // Range query within a given circle
-                        System.out.println("Range Query within a given circle selected");
+                        System.out.println("Skyline selected");
                         System.out.println("Give the coordinate of each axis that the circle's center is (input example for each dimension : 33.4)");
                         ArrayList<Double> point = new ArrayList<>(); // The circle's center
                         for (int i = 0; i < FilesHelper.getDataDimensions(); i++) {
@@ -145,6 +145,9 @@ class UserInterface {
                                 break;
                             else
                                 System.out.println("Radius of the circle must be a positive number");
+
+
+
                         }
                     case "3":
                         // KNN Query

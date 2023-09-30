@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class RStarTree {
 
@@ -17,10 +18,8 @@ public class RStarTree {
         {
             FilesHelper.writeNewIndexFileBlock(new Node(1));
 
-            System.out.println(FilesHelper.getTotalBlocksInDatafile());
             for (int i = 1; i < FilesHelper.getTotalBlocksInDatafile(); i++)
             {
-                System.out.println(i);
                 ArrayList<Record> records = FilesHelper.readDataFileBlock(i);
                 if(records!=null)
                 {
@@ -36,12 +35,27 @@ public class RStarTree {
 
     }
 
-    ArrayList<Long> getBoundingBoxRangeQuery(BoundingBox searchBox)
+    public RStarTree(boolean insertRecords, boolean bulk)
     {
-        Query query = new BoundingBoxRangeQuery(searchBox);
-        return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
-    }
+        this.totalLevels = FilesHelper.getTotalLevelsOfTreeIndex();
+        if(insertRecords)
+        {
+            FilesHelper.writeNewIndexFileBlock(new Node(1));
+            ArrayList<Record> records = new ArrayList<>();
+            for (int i = 1; i < FilesHelper.getTotalBlocksInDatafile(); i++) {
+                for (Record record : FilesHelper.readDataFileBlock(i)) {
+                    records.add(record);
+                }
+            }
+            Collections.sort(records, Comparator.comparingDouble(o -> o.getCoordinate(0)));
+            ArrayList<Node> index = new ArrayList<>();
+            for (int i = 1; i < FilesHelper.getTotalBlocksInIndexFile(); i++) {
+                index.add(FilesHelper.readIndexFileBlock(i));
+            }
 
+        }
+
+    }
 
     static int getRootNodeBlockId()
     {
@@ -241,14 +255,21 @@ public class RStarTree {
         return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
     }
 /*
-    private void deleteRecord(Record record, long datafileBlockId)
+    ArrayList<Record> getSkyline()
     {
-        ArrayList<Bounds> bounds = new ArrayList<>();
+        SkylineQuery.findSkyline()
+
+    }
+*/
+    private void deleteRecord(Record record, long datafileBlockId, Node node)
+    {
+        ArrayList<Bounds> dimensionBounds = new ArrayList<>();
         for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
         {
-            bounds.add(new Bounds(record.getCoordinate(i),record.getCoordinate(i)));
+            dimensionBounds.add(new Bounds(record.getCoordinate(i),record.getCoordinate(i)));
         }
-        levelsInserted = new boolean[totalLevels];
+        LeafEntry leafEntry = new LeafEntry(record.getId(),datafileBlockId,dimensionBounds);
+        Node leafNode = findLeaf(leafEntry,node);
 
     }
 
@@ -268,11 +289,22 @@ public class RStarTree {
         }
         else
         {
-
+            for (int i = 0; i < FilesHelper.getDataDimensions(); i++) {
+                for (Entry entry1 : entries)
+                {
+                    int lower = Double.compare(entry1.getBoundingBox().getBounds().get(i).getLower(),entry.getBoundingBox().getBounds().get(i).getLower());
+                    int upper = Double.compare(entry1.getBoundingBox().getBounds().get(i).getUpper(),entry.getBoundingBox().getBounds().get(i).getUpper());
+                    if(lower == 0 && upper == 0)
+                    {
+                        return node;
+                    }
+                }
+            }
         }
+        return null;
     }
 
-*/
+
 
 
 }

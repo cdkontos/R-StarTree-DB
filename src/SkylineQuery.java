@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SkylineQuery {
+public class SkylineQuery{
 
     public static List<Record> findSkyline(RStarTree rStarTree) {
         Node rootNode = rStarTree.getRoot();
@@ -40,4 +40,5 @@ public class SkylineQuery {
         }
         return true;
     }
+
 }

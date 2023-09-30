@@ -21,7 +21,6 @@ public class Node implements Serializable {
         this.level = level;
         this.entries = entries;
     }
-
     public void setBlockID(long blockID) {
         this.blockID = blockID;
     }

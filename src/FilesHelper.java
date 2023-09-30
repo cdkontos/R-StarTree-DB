@@ -570,7 +570,7 @@ public class FilesHelper {
             System.arraycopy(block, goodPutLengthInBytes.length, nodeInBytes, 0, nodeInBytes.length);
 
             // Deserialize the node data to reconstruct the R* tree node
-            return (Node) deserialize(nodeInBytes);
+            return (Node)deserialize(nodeInBytes);
 
         } catch (Exception e) {
             e.printStackTrace();
