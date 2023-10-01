@@ -1,5 +1,9 @@
 import java.util.Scanner;
 
+/**
+ * This is the main class of the RStarTree implementation where the creation of the tree is called as well as showing the time it took to build.
+ * @author Christos Kontos
+ */
 public class Main {
     public static void main(String[] args){
         boolean reconstructingTree = UserInterface.startApplication();

@@ -1,6 +1,5 @@
 /**
  * A class representing a distribution of data into two groups.
- *
  * @author Christos Kontos
  */
 public class Distribution {
@@ -9,7 +8,6 @@ public class Distribution {
 
     /**
      * Constructs a Distribution object with the specified first and second groups.
-     *
      * @param firstGroup  The first group of the distribution.
      * @param secondGroup The second group of the distribution.
      */
@@ -20,7 +18,6 @@ public class Distribution {
 
     /**
      * Gets the first group of the distribution.
-     *
      * @return The first group of the distribution.
      */
     public DistributionGroup getFirstGroup() {
@@ -29,7 +26,6 @@ public class Distribution {
 
     /**
      * Gets the second group of the distribution.
-     *
      * @return The second group of the distribution.
      */
     public DistributionGroup getSecondGroup() {

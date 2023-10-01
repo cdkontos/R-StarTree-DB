@@ -1,15 +1,24 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ *This class implements the RStarTree as well as the different methods it uses.
+ * @author Christos Kontos
+ */
 public class RStarTree {
 
-    private int totalLevels;
-    private boolean[] levelsInserted;
-    private static final int ROOT_NODE_BLOCK_ID = 1;
-    private static final int LEAF_LEVEL = 1;
+    private int totalLevels; // The total levels of the tree, increasing the size starting with the root, the root (top level) will always have the highest level.
+    private boolean[] levelsInserted; // Used for information on which levels have already called overflow on data insertion.
+    private static final int ROOT_NODE_BLOCK_ID = 1; // Root node will always have 1 as its ID, in order to identify which block has the root Node.
+    private static final int LEAF_LEVEL = 1; // Constant leaf level 1, since we are increasing the level from the root, the root (top level) will always have the highest level.
     private static final int CHOOSE_SUBTREE_P_ENTRIES = 32;
-    private static final int REINSERT_P_ENTRIES = (int) (0.30 * Node.getMaxEntries());
+    private static final int REINSERT_P_ENTRIES = (int) (0.30 * Node.getMaxEntries()); // Setting p to 30% of max entries.
 
+    /**
+     * This is the constructor for the normal RStar Tree.
+     * It uses a boolean parameter to identify whether to create a new tree in the data files or not.
+     * @param insertRecords boolean that is used to signal the making of a new tree or not.
+     */
     public RStarTree(boolean insertRecords)
     {
         this.totalLevels = FilesHelper.getTotalLevelsOfTreeIndex();
@@ -34,6 +43,13 @@ public class RStarTree {
 
     }
 
+    /**
+     * This is the constructor for the bulk loaded RStar Tree
+     * It uses two boolean parameters to identify whether to create a new tree in the data files or not
+     * and to differentiate it from the other constructor with the bulk parameter.
+     * @param insertRecords boolean that is used to signal the making of a new tree or not.
+     * @param bulk boolean that is used to differentiate this constructor as the bulk load one.
+     */
     public RStarTree(boolean insertRecords, boolean bulk)
     {
         this.totalLevels = FilesHelper.getTotalLevelsOfTreeIndex();
@@ -57,8 +73,8 @@ public class RStarTree {
                 zValues.add(interleaveBits(coordinates));
             }
             Collections.sort(records, (o1, o2) -> {
-                long zValue1 = getZvalue(o1);
-                long zValue2 = getZvalue(o2);
+                long zValue1 = getZValue(o1);
+                long zValue2 = getZValue(o2);
                 return Long.compare(zValue1,zValue2);
             });
 
@@ -70,7 +86,12 @@ public class RStarTree {
 
     }
 
-    private long getZvalue(Record record)
+    /**
+     * This method is used to get the ZValue of the record given by calling the interleaveBits function.
+     * @param record the record of which we want the ZValue.
+     * @return this returns the ZValue of the record by calling the interleaveBits function with its coordinates.
+     */
+    private long getZValue(Record record)
     {
         ArrayList<Double> coordinates = new ArrayList<>();
         for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
@@ -92,6 +113,13 @@ public class RStarTree {
     {
         return FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID);
     }
+
+    /**
+     * This method is used to insert a record into the normal RStarTree.
+     * It calls the insert function to insert the records in the tree as new LeafEntries.
+     * @param record the record we want to insert into the tree.
+     * @param datafileBlockID the dataFileBlockID of the record.
+     */
     private void insertRecord(Record record, long datafileBlockID)
     {
         ArrayList<Bounds> dimensionBounds = new ArrayList<>();
@@ -103,6 +131,11 @@ public class RStarTree {
         insert(null,null, new LeafEntry(record.getId(), datafileBlockID, dimensionBounds), LEAF_LEVEL);
     }
 
+    /**
+     * This method is used to insert the records into the bulk loaded RStarTree.
+     * It calls the insert function to insert the records in the tree as new LeafEntries.
+     * @param records the records we want to insert into the tree.
+     */
     private void insertRecord(ArrayList<Record> records)
     {
         int sum = 0;
@@ -123,6 +156,15 @@ public class RStarTree {
         }
     }
 
+    /**
+     * This method inserts the entries into the tree and adjusts it.
+     * @param parentN this is the parent node of the node the entry is in.
+     * @param parentE this is the parent entry of the entry we want to insert.
+     * @param data  this is the entry we want to insert into the tree.
+     * @param level this is the level of the tree the entry will be inserted into.
+     * @return this method either returns null cause of recursion to signal that it has finished,
+     * or it calls the overflow function to balance the tree.
+     */
     private Entry insert(Node parentN, Entry parentE, Entry data, int level)
     {
         Node child;
@@ -178,6 +220,13 @@ public class RStarTree {
         return null;
     }
 
+    /**
+     * This method is used to pick the subtree an entry will end up in.
+     * @param node the node of the entry we want to move.
+     * @param boundingBox the bounding box of the entry.
+     * @param level the level of the node the entry is in.
+     * @return this returns the best entry to be moved.
+     */
     private Entry pickSubTree(Node node, BoundingBox boundingBox, int level)
     {
         Entry bestEntry;
@@ -217,6 +266,13 @@ public class RStarTree {
         return bestEntry;
     }
 
+    /**
+     * This method is used in the case a node overflows, and it has to be split.
+     * @param parentN the parent node of the node that needs to be split.
+     * @param parentE the entry of the parent node.
+     * @param childN the child node to be split.
+     * @return returns either null or an entry from the new split node.
+     */
     private Entry overflow(Node parentN, Entry parentE, Node childN)
     {
         if(childN.getBlockID() != ROOT_NODE_BLOCK_ID && !levelsInserted[childN.getLevel()-1])
@@ -258,6 +314,12 @@ public class RStarTree {
         return null;
     }
 
+    /**
+     * This method is used to reinsert nodes after the overflow function is finished.
+     * @param parentN the parent node.
+     * @param parentE the entry of the parent node.
+     * @param childN the child node.
+     */
     private void reInsert(Node parentN, Entry parentE, Node childN)
     {
         if(childN.getEntries().size() != Node.getMaxEntries() +1)
@@ -286,63 +348,43 @@ public class RStarTree {
         }
     }
 
-    // Query which returns the ids of the Records that are inside the given searchBoundingBox
+    /**
+     * Query which returns the ids of the Records that are inside the given searchBoundingBox.
+     * @param searchBoundingBox the bounding box we want to search in.
+     * @return the ids of the Records that are inside the given searchBoundingBox
+     */
     ArrayList<Long> getBoundingBoxData(BoundingBox searchBoundingBox){
         Query query = new BoundingBoxRangeQuery(searchBoundingBox);
         return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
     }
 
-    // Query which returns the ids of the K Records that are closer to the given point
+    /**
+     * Query which returns the ids of the K Records that are closer to the given point.
+     * @param searchPoint the point around which we will find the neighbours.
+     * @param k the amount of neighbours.
+     * @return the ids of the K Records that are closer to the given point.
+     */
     ArrayList<Long> getNearestNeighbours(ArrayList<Double> searchPoint, int k){
         Query query = new NearestNeighbourQuery(searchPoint,k);
         return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
     }
+
+    /**
+     * Query which returns the skyline of the points given.
+     * NOT IMPLEMENTED
+     * @param queryPoint the points from which we want to find the skyline.
+     * @return the ids of the records that form the skyline.
+     */
     ArrayList<Long> getSkyline(ArrayList<Double> queryPoint) {
         Query query = new SkylineQuery(queryPoint);
         return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
     }
-    private void deleteRecord(Record record, long datafileBlockId, Node node)
-    {
-        ArrayList<Bounds> dimensionBounds = new ArrayList<>();
-        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
-        {
-            dimensionBounds.add(new Bounds(record.getCoordinate(i),record.getCoordinate(i)));
-        }
-        LeafEntry leafEntry = new LeafEntry(record.getId(),datafileBlockId,dimensionBounds);
-        Node leafNode = findLeaf(leafEntry,node);
 
-    }
-
-    private Node findLeaf(Entry entry, Node node)
-    {
-        ArrayList<Entry> entries = node.getEntries();
-        if(node.getLevel() != LEAF_LEVEL)
-        {
-            for (Entry entry1 : entries)
-            {
-                if(BoundingBox.checkBoxOverlap(entry1.getBoundingBox(),entry.getBoundingBox()))
-                {
-                    Node child = FilesHelper.readIndexFileBlock(entry1.getChildNodeBlockID());
-                    findLeaf(entry1,child);
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < FilesHelper.getDataDimensions(); i++) {
-                for (Entry entry1 : entries)
-                {
-                    int lower = Double.compare(entry1.getBoundingBox().getBounds().get(i).getLower(),entry.getBoundingBox().getBounds().get(i).getLower());
-                    int upper = Double.compare(entry1.getBoundingBox().getBounds().get(i).getUpper(),entry.getBoundingBox().getBounds().get(i).getUpper());
-                    if(lower == 0 && upper == 0)
-                    {
-                        return node;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+    /**
+     * This method calculates the interleaveBits for the ZValue.
+     * @param coordinates the coordinates of the record from which the ZValue will be calculated.
+     * @return the ZValue.
+     */
     public static long interleaveBits(ArrayList<Double> coordinates)
     {
         int numDimensions = coordinates.size();

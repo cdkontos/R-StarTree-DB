@@ -4,7 +4,6 @@ import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 /**
  * A class representing a bounding box in an n-dimensional space. This bounding box is used for spatial indexing and querying.
- *
  * @author Christos Kontos
  */
 public class BoundingBox implements Serializable {
@@ -15,7 +14,6 @@ public class BoundingBox implements Serializable {
 
     /**
      * Constructs a bounding box with the given bounds in each dimension.
-     *
      * @param bounds An ArrayList of Bounds, where each Bounds object represents the range of a dimension.
      */
     public BoundingBox(ArrayList<Bounds> bounds) {
@@ -27,7 +25,6 @@ public class BoundingBox implements Serializable {
 
     /**
      * Gets the bounds of this bounding box.
-     *
      * @return An ArrayList of Bounds, where each Bounds object represents the range of a dimension.
      */
     public ArrayList<Bounds> getBounds() {
@@ -36,7 +33,6 @@ public class BoundingBox implements Serializable {
 
     /**
      * Calculates and retrieves the area of the bounding box.
-     *
      * @return The calculated area of the bounding box.
      */
     public Double getArea() {
@@ -47,7 +43,6 @@ public class BoundingBox implements Serializable {
 
     /**
      * Calculates and retrieves the perimeter of the bounding box.
-     *
      * @return The calculated perimeter of the bounding box.
      */
     public Double getPerimeter() {
@@ -58,7 +53,6 @@ public class BoundingBox implements Serializable {
 
     /**
      * Calculates and retrieves the center coordinates of the bounding box.
-     *
      * @return An ArrayList containing the center coordinates for each dimension.
      */
     public ArrayList<Double> getCenter() {
@@ -98,7 +92,6 @@ public class BoundingBox implements Serializable {
 
     /**
      * Finds the minimum distance from a point to the bounding box.
-     *
      * @param point The point for which the minimum distance is calculated.
      * @return The minimum distance from the point to the bounding box.
      */
@@ -126,7 +119,6 @@ public class BoundingBox implements Serializable {
 
     /**
      * Checks if two bounding boxes overlap.
-     *
      * @param boundingBoxA The first bounding box.
      * @param boundingBoxB The second bounding box.
      * @return True if the two bounding boxes overlap, otherwise false.
@@ -148,7 +140,6 @@ public class BoundingBox implements Serializable {
 
     /**
      * Calculates the overlap value between two bounding boxes.
-     *
      * @param boundingBoxA The first bounding box.
      * @param boundingBoxB The second bounding box.
      * @return The calculated overlap value between the two bounding boxes.
@@ -173,7 +164,6 @@ public class BoundingBox implements Serializable {
 
     /**
      * Calculates the distance between the centers of two bounding boxes.
-     *
      * @param boundingBoxA The first bounding box.
      * @param boundingBoxB The second bounding box.
      * @return The distance between the centers of the two bounding boxes.

@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 /**
  * A class representing bounds in an n-dimensional space. Bounds consist of a lower and upper value for a dimension.
- *
  * @author Christos Kontos
  */
 public class Bounds implements Serializable {
@@ -12,7 +11,6 @@ public class Bounds implements Serializable {
 
     /**
      * Constructs Bounds with the specified lower and upper values.
-     *
      * @param lower The lower bound value for the dimension.
      * @param upper The upper bound value for the dimension.
      * @throws IllegalArgumentException If the lower bound value is greater than the upper bound value.
@@ -29,7 +27,6 @@ public class Bounds implements Serializable {
 
     /**
      * Gets the lower bound value.
-     *
      * @return The lower bound value for the dimension.
      */
     public double getLower() {
@@ -38,7 +35,6 @@ public class Bounds implements Serializable {
 
     /**
      * Gets the upper bound value.
-     *
      * @return The upper bound value for the dimension.
      */
     public double getUpper() {
@@ -47,7 +43,6 @@ public class Bounds implements Serializable {
 
     /**
      * Finds the minimum bounds for a list of entries along each dimension.
-     *
      * @param entries A list of entries to find minimum bounds from.
      * @return An ArrayList of Bounds, where each Bounds object represents the minimum bounds along a dimension.
      */
@@ -65,7 +60,6 @@ public class Bounds implements Serializable {
 
     /**
      * Finds the minimum bounds between two bounding boxes along each dimension.
-     *
      * @param boundingBoxA The first bounding box.
      * @param boundingBoxB The second bounding box.
      * @return An ArrayList of Bounds, where each Bounds object represents the minimum bounds between the two bounding boxes along a dimension.

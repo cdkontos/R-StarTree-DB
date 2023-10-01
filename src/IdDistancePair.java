@@ -1,6 +1,5 @@
 /**
  * Represents a pair containing the ID of a record and its distance from a specific item.
- *
  * @author Christos Kontos
  */
 class IdDistancePair {
@@ -9,7 +8,6 @@ class IdDistancePair {
 
     /**
      * Constructs an IdDistancePair with the specified record ID and distance from an item.
-     *
      * @param recordId          The ID of the record.
      * @param distanceFromItem  The distance from the specific item.
      */
@@ -20,7 +18,6 @@ class IdDistancePair {
 
     /**
      * Get the record ID stored in this pair.
-     *
      * @return The record ID.
      */
     long getRecordId() {
@@ -29,7 +26,6 @@ class IdDistancePair {
 
     /**
      * Get the distance from the specific item stored in this pair.
-     *
      * @return The distance from the item.
      */
     double getDistanceFromItem() {

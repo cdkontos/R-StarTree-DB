@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 /**
  * A utility class containing nested comparator classes for comparing entries based on various criteria.
- *
  * @author Christos Kontos
  */
 public class EntryCompare {
