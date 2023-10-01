@@ -29,7 +29,6 @@ class UserInterface {
                 }
             }
         }
-
         boolean insertRecordsFromDataFile = false;
         int dataDimensions = 0;
 
@@ -121,7 +120,7 @@ class UserInterface {
                         System.out.println();
                         System.out.println("Time taken: " + (double) (stopSequentialRangeQueryTime - startSequentialRangeQueryTime) / 1000000 + " ms");
                         System.out.println();
-
+                        System.out.println(queryRecords.size() + " Results");
                         break switchLabel;
                     case "2":
                         // Range query within a given circle
@@ -142,7 +141,7 @@ class UserInterface {
                         for (Long id : queryRecords)
                             System.out.print(id + ", ");
                         System.out.println();
-                        System.out.println("Time taken for KNN using R star tree: " + (double) (stopSkyTime - startSkyTime) / 1000000 + " ms");
+                        System.out.println("Time taken for Skyline using R star tree: " + (double) (stopSkyTime - startSkyTime) / 1000000 + " ms");
                     case "3":
                         // KNN Query
                         System.out.println("K-NN query selected");

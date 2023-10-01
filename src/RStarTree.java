@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class RStarTree {
 
@@ -47,14 +46,38 @@ public class RStarTree {
                     records.add(record);
                 }
             }
-            Collections.sort(records, Comparator.comparingDouble(o -> o.getCoordinate(0)));
-            ArrayList<Node> index = new ArrayList<>();
-            for (int i = 1; i < FilesHelper.getTotalBlocksInIndexFile(); i++) {
-                index.add(FilesHelper.readIndexFileBlock(i));
+            ArrayList<Long> zValues = new ArrayList<>();
+            for (Record record : records)
+            {
+                ArrayList<Double> coordinates = new ArrayList<>();
+                for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
+                {
+                    coordinates.add(record.getCoordinate(i));
+                }
+                zValues.add(interleaveBits(coordinates));
             }
+            Collections.sort(records, (o1, o2) -> {
+                long zValue1 = getZvalue(o1);
+                long zValue2 = getZvalue(o2);
+                return Long.compare(zValue1,zValue2);
+            });
 
+            long startTreeTime = System.nanoTime();
+            insertRecord(records);
+            long stopTreeTime = System.nanoTime();
+            System.out.println("Time taken for R*Tree Bulk Loading: " + (double) (stopTreeTime - startTreeTime) / 1000000 + " ms");
         }
 
+    }
+
+    private long getZvalue(Record record)
+    {
+        ArrayList<Double> coordinates = new ArrayList<>();
+        for (int i = 0; i < FilesHelper.getDataDimensions(); i++)
+        {
+            coordinates.add(record.getCoordinate(i));
+        }
+        return interleaveBits(coordinates);
     }
 
     static int getRootNodeBlockId()
@@ -78,6 +101,26 @@ public class RStarTree {
         }
         levelsInserted = new boolean[totalLevels];
         insert(null,null, new LeafEntry(record.getId(), datafileBlockID, dimensionBounds), LEAF_LEVEL);
+    }
+
+    private void insertRecord(ArrayList<Record> records)
+    {
+        int sum = 0;
+        for (int i = 1; i < FilesHelper.getTotalBlocksInDatafile(); i++)
+        {
+            ArrayList<Record> size = FilesHelper.readDataFileBlock(i);
+            for (int s = sum ; s < sum + size.size() ; s++)
+            {
+                ArrayList<Bounds> dimensionBounds = new ArrayList<>();
+                for (int j = 0; j < FilesHelper.getDataDimensions(); j++)
+                {
+                    dimensionBounds.add(new Bounds(records.get(s).getCoordinate(j),records.get(s).getCoordinate(j)));
+                }
+                levelsInserted = new boolean[totalLevels];
+                insert(null,null, new LeafEntry(records.get(s).getId(), i, dimensionBounds), LEAF_LEVEL);
+            }
+            sum += size.size();
+        }
     }
 
     private Entry insert(Node parentN, Entry parentE, Entry data, int level)
@@ -300,7 +343,20 @@ public class RStarTree {
         }
         return null;
     }
-
+    public static long interleaveBits(ArrayList<Double> coordinates)
+    {
+        int numDimensions = coordinates.size();
+        int numBits = Double.SIZE;
+        long zValue = 0;
+        for (int i = 0; i < numBits; i++) {
+            for (int j = 0; j < numDimensions; j++) {
+                long coordinateBits = Double.doubleToRawLongBits(coordinates.get(j));
+                int coordinateBit = (int)((coordinateBits >> i) & 1L);
+                zValue |= (coordinateBit << (i * numDimensions + j));
+            }
+        }
+        return zValue;
+    }
 
 
 
