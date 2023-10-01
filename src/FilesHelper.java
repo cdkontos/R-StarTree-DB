@@ -1,13 +1,15 @@
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.nio.file.Paths;
-import java.nio.charset.StandardCharsets;
 
+/**
+ * The FilesHelper class provides utility methods for working with data files, index files,
+ * and metadata in the context of the R* tree index.
+ *
+ * @author Akompian Georgios
+ */
 public class FilesHelper {
     private static final String DELIMITER = ","; // The separator of the strings in the csv file
     private static final String PATH_TO_CSV = "map.csv";
@@ -20,21 +22,59 @@ public class FilesHelper {
     private static int totalLevelsOfTreeIndex; // The total levels of the R* tree
 
 
+    /**
+     * Retrieves the path to the CSV file containing the initial data.
+     *
+     * @return The path to the CSV file.
+     */
     static String getPathToCsv() {return PATH_TO_CSV;}
 
+    /**
+     * Retrieves the delimiter used in the CSV file.
+     *
+     * @return The CSV delimiter.
+     */
     static String getDELIMITER() {return DELIMITER;}
 
+    /**
+     * Retrieves the number of dimensions in the data.
+     *
+     * @return The number of data dimensions.
+     */
     static int getDataDimensions() {return dataDimensions;}
 
+    /**
+     * Retrieves the total number of blocks in the data file.
+     *
+     * @return The total blocks in the data file.
+     */
     static int getTotalBlocksInDatafile() {return totalBlocksInDatafile;}
 
+    /**
+     * Retrieves the total number of blocks in the index file.
+     *
+     * @return The total blocks in the index file.
+     */
     static int getTotalBlocksInIndexFile() {
         return totalBlocksInIndexFile;
     }
 
+    /**
+     * Retrieves the total levels (height) of the R* tree index.
+     *
+     * @return The total levels of the tree index.
+     */
     static int getTotalLevelsOfTreeIndex() {return totalLevelsOfTreeIndex;}
 
-    // Serializing a serializable Object to byte array
+
+
+    /**
+     * Serializes a serializable object to a byte array.
+     *
+     * @param obj The object to be serialized.
+     * @return The serialized object as a byte array.
+     * @throws IOException            If an I/O error occurs during serialization.
+     */
     private static byte[] serialize(Object obj) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
@@ -42,7 +82,15 @@ public class FilesHelper {
         return out.toByteArray();
     }
 
-    // Deserializing a byte array to a serializable Object
+
+    /**
+     * Deserializes a byte array to a serializable object.
+     *
+     * @param data The byte array to be deserialized.
+     * @return The deserialized object.
+     * @throws IOException            If an I/O error occurs during deserialization.
+     * @throws ClassNotFoundException If the class of the serialized object cannot be found.
+     */
     private static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
@@ -51,9 +99,12 @@ public class FilesHelper {
 
     // Metadata methods
 
-    // Reads the data from the given file path
-    // Reads Block 0, which contains metadata information about the file
-    // Returns an ArrayList<Integer> containing metadata values
+    /**
+     * Reads the metadata from the given file path.
+     * Reads Block 0, which contains metadata information about the file.
+     * @param pathToFile The path to the file containing metadata.
+     * @return An ArrayList<Integer> containing metadata values.
+     */
     private static ArrayList<Integer> readMetaDataBlock(String pathToFile){
         try {
             // Open the file for reading and create input streams
@@ -96,7 +147,12 @@ public class FilesHelper {
         return null;
     }
 
-    // Updates the metadata block in the specified file (block size, data dimensions, total block0 blocks)
+
+    /**
+     * Updates the metadata block in the specified file (block size, data dimensions, total block0 blocks).
+     *
+     * @param pathToFile The path to the file to update metadata for.
+     */
     private static void updateMetaDataBlock(String pathToFile) {
         try {
             // Create an ArrayList to store metadata values
@@ -150,9 +206,12 @@ public class FilesHelper {
 
 
     // Datafile methods
-
-    // Reads and then adds the data from the map.csv to the datafile
-    // Calculates the number of total blocks in the datafile
+    /**
+     * Reads and then adds the data from the map.csv to the datafile.
+     *
+     * @param dataDimensions    The number of dimensions in the data.
+     * @param makeNewDataFile   A flag indicating whether to create a new datafile or use an existing one.
+     */
     static void initializeDataFile(int dataDimensions, boolean makeNewDataFile) {
         try {
             // Checks if a datafile already exists, initialize the metaData from the metadata block (block 0 of the file)
@@ -206,7 +265,12 @@ public class FilesHelper {
         }
     }
 
-    // Calculates and return an integer which represents the maximum number of records a block of BLOCK_SIZE can have
+    /**
+     * Calculates and returns an integer representing the maximum number of records
+     * a block of BLOCK_SIZE can have.
+     *
+     * @return The maximum number of records in a block.
+     */
     private static int calculateMaxRecordsInBlock() {
         ArrayList<Record> blockRecords = new ArrayList<>();
         int i;
@@ -230,8 +294,12 @@ public class FilesHelper {
         return i;
     }
 
-    // Used for writing and saving an array of records as a new block of bytes in the datafile
-    static void writeDataFileBlock(ArrayList<Record> records) {
+    /**
+     * Used for writing and saving an array of records as a new block of bytes in the datafile.
+     *
+     * @param records The records to be written to the datafile.
+     */
+        static void writeDataFileBlock(ArrayList<Record> records) {
         try {
 
             // Serialize the list of records and its length to bytes
@@ -316,9 +384,12 @@ public class FilesHelper {
 
     // Indexfile methods
 
-
-    // Calculates and returns an estimate of the maximum number of entries (records) that can fit
-    // within a block of size BLOCK_SIZE. This estimation is based on the size of serialized entries.
+    /**
+     * Calculates and returns an estimate of the maximum number of entries (records) that can fit
+     * within a block of size BLOCK_SIZE.
+     *
+     * @return The estimated maximum number of entries in a block.
+     */
     static int calculateMaxEntriesInNode() {
         // Create an array to store random entries
         ArrayList<Entry> randomEntries = new ArrayList<>();
@@ -353,11 +424,11 @@ public class FilesHelper {
         return i;
     }
 
-
-    // Updates the metadata block in the indexFile with an increased level of the tree index.
-    // This method saves the current data dimensions, block size, total blocks in the index file,
-    // and increments the total levels of the tree index. It is typically used to update the
-    // R* tree index metadata when a new level is added.
+    /**
+     * Updates the metadata block in the indexFile with an increased level of the tree index.
+     * This method saves the current data dimensions, block size, total blocks in the index file,
+     * and increments the total levels of the tree index.
+     */
     private static void updateLevelsOfTreeInIndexFile() {
         try {
             // Create an ArrayList to store metadata values

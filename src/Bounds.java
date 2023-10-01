@@ -1,11 +1,22 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-
+/**
+ * A class representing bounds in an n-dimensional space. Bounds consist of a lower and upper value for a dimension.
+ *
+ * @author Christos Kontos
+ */
 public class Bounds implements Serializable {
     private double lower;
     private double upper;
 
+    /**
+     * Constructs Bounds with the specified lower and upper values.
+     *
+     * @param lower The lower bound value for the dimension.
+     * @param upper The upper bound value for the dimension.
+     * @throws IllegalArgumentException If the lower bound value is greater than the upper bound value.
+     */
     public Bounds(double lower, double upper) {
         if(lower<=upper)
         {
@@ -16,14 +27,30 @@ public class Bounds implements Serializable {
             throw new IllegalArgumentException( "The lower bound value cannot be bigger than that of the upper bound.");
     }
 
+    /**
+     * Gets the lower bound value.
+     *
+     * @return The lower bound value for the dimension.
+     */
     public double getLower() {
         return lower;
     }
 
+    /**
+     * Gets the upper bound value.
+     *
+     * @return The upper bound value for the dimension.
+     */
     public double getUpper() {
         return upper;
     }
 
+    /**
+     * Finds the minimum bounds for a list of entries along each dimension.
+     *
+     * @param entries A list of entries to find minimum bounds from.
+     * @return An ArrayList of Bounds, where each Bounds object represents the minimum bounds along a dimension.
+     */
     static ArrayList<Bounds> findMinBounds(ArrayList<Entry> entries)
     {
         ArrayList<Bounds> minBounds = new ArrayList<>();
@@ -36,6 +63,13 @@ public class Bounds implements Serializable {
         return minBounds;
     }
 
+    /**
+     * Finds the minimum bounds between two bounding boxes along each dimension.
+     *
+     * @param boundingBoxA The first bounding box.
+     * @param boundingBoxB The second bounding box.
+     * @return An ArrayList of Bounds, where each Bounds object represents the minimum bounds between the two bounding boxes along a dimension.
+     */
     static ArrayList<Bounds> findMinBounds(BoundingBox boundingBoxA, BoundingBox boundingBoxB)
     {
         ArrayList<Bounds> minBounds = new ArrayList<>();

@@ -2,9 +2,18 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+/**
+ * The UserInterface class provides a text-based user interface for interacting with the R* Tree application.
+ * It allows users to create and reset data and index files, execute various types of queries, and display results.
+ *
+ * @author Akompian Georgios
+ */
 class UserInterface {
-    // Starts the application by initializing the files based on the user's options
+    /**
+     * Starts the application by initializing the files based on the user's options.
+     *
+     * @return True if records are inserted from the data file, false otherwise.
+     */
     static boolean startApplication() {
         boolean filesExist = Files.exists(Paths.get(FilesHelper.PATH_TO_DATAFILE));
         boolean resetFiles = false;
@@ -45,7 +54,11 @@ class UserInterface {
         return insertRecordsFromDataFile;
     }
 
-    // Runs the application and executes queries that the user has selected
+    /**
+     * Runs the application and executes queries that the user has selected.
+     *
+     * @param rStarTree The R* Tree instance used for executing queries.
+     */
     static void runApplication(RStarTree rStarTree) {
         Scanner scan = new Scanner(System.in); // Scanner used to get input from the user
 
@@ -197,10 +210,13 @@ class UserInterface {
         } while (!querySelection.equals("0"));
     }
 
-    // TODO maybe remove or update
+    /**
+     * Prints the overall bounding box and entries of a node.
+     * This method is used to display the bounding box and entries of a node in the R* Tree.
+     *
+     * @param parentEntry The entry representing the node to be printed.
+     */
     static private void printOverallNode(Entry parentEntry) {
-        // Prints overall node bb and entries
-        // overall rectangle
 
         if (parentEntry.getBoundingBox() != null) {
             System.out.print("Overall bounding box:  ");

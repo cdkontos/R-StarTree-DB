@@ -2,8 +2,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-
+/**
+ * A utility class containing nested comparator classes for comparing entries based on various criteria.
+ *
+ * @author Christos Kontos
+ */
 public class EntryCompare {
+    /**
+     * A comparator class for comparing entries based on their bounding box bounds in a specific dimension.
+     */
     static class EntryBoundCompare implements Comparator<Entry> {
         private HashMap<Entry, Double> entryCompareMap;
 
@@ -25,7 +32,9 @@ public class EntryCompare {
         }
     }
 
-    // Class used to compare entries by their distance from a point
+    /**
+     * A comparator class for comparing entries based on their distance from a specified point.
+     */
     static class EntryDistanceFromPointCompare implements Comparator<Entry> {
         // Hash-map  used for mapping the comparison value of the Entries during the compare method
         // Key of the hash-map is the given Entry
@@ -45,7 +54,10 @@ public class EntryCompare {
         }
     }
 
-        static class EntryEnlargementCompare implements Comparator<Entry> {
+    /**
+     * A comparator class for comparing entries based on their area enlargement when combined with a bounding box.
+     */
+    static class EntryEnlargementCompare implements Comparator<Entry> {
             private HashMap<Entry, ArrayList<Double>> entryCompareMap;
 
             public EntryEnlargementCompare(List<Entry> entries, BoundingBox boundingBox) {
@@ -75,6 +87,10 @@ public class EntryCompare {
             }
         }
 
+
+    /**
+     * A comparator class for comparing entries based on their overlap enlargement with a bounding box.
+     */
         static class EntryEnlargementOverlapCompare implements Comparator<Entry> {
             private BoundingBox boundingBox;
             private ArrayList<Entry> entries;
@@ -126,6 +142,9 @@ public class EntryCompare {
             }
         }
 
+    /**
+     * A comparator class for comparing entries based on their distance from the center of a bounding box.
+     */
         static class EntryDistanceCenterCompare implements Comparator<Entry> {
             private HashMap<Entry, Double> entryCompareMap;
 

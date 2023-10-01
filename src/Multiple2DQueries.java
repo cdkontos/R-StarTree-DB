@@ -1,8 +1,19 @@
 import java.io.*;
 import java.util.ArrayList;
 
-// Testing the queries for a variety of two dimensional input
+/**
+ * Multiple2DQueries is a class for testing range and k-nearest neighbor (KNN) queries
+ * on a two-dimensional dataset using both R* tree and sequential scan methods.
+ * It measures query execution times and records the results in CSV files.
+ *
+ * @author Akompian Georgios
+ */
 public class Multiple2DQueries {
+    /**
+     * Main method for executing range and KNN queries and recording the results in CSV files.
+     *
+     * @param args The command-line arguments (not used in this application).
+     */
     public static void main(String[] args){
 
         RStarTree rStarTree = new RStarTree(false);

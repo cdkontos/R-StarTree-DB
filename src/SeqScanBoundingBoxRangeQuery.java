@@ -1,17 +1,29 @@
 import java.util.ArrayList;
-
-// Class used for executing a range query withing a specific bounding box without the use of an index
-// Searches for records within that bounding box
+/**
+ * The SeqScanBoundingBoxRangeQuery class is used for executing a range query within a specific bounding box
+ * without the use of an index. It searches for records within the specified bounding box.
+ *
+ * @author Akompian Georgios
+ */
 class SeqScanBoundingBoxRangeQuery extends SeqScanQuery {
 
     private ArrayList<Long> qualifyingRecordIds; // Record ids used for queries
     private BoundingBox searchBoundingBox; // Bounding box used for range queries
 
+    /**
+     * Constructs a SeqScanBoundingBoxRangeQuery with the given search bounding box.
+     *
+     * @param searchBoundingBox The bounding box used for range queries.
+     */
     SeqScanBoundingBoxRangeQuery(BoundingBox searchBoundingBox) {
         this.searchBoundingBox = searchBoundingBox;
     }
 
-    // Returns the ids of the query's records
+    /**
+     * Returns the IDs of the query's records that fall within the specified bounding box.
+     *
+     * @return The IDs of the records within the bounding box.
+     */
     @Override
     ArrayList<Long> getQueryRecordIds() {
         qualifyingRecordIds = new ArrayList<>();
@@ -19,6 +31,9 @@ class SeqScanBoundingBoxRangeQuery extends SeqScanQuery {
         return qualifyingRecordIds;
     }
 
+    /** Method to search for records within the bounding box.
+     *
+     */
     private void search(){
         int blockId = 1;
         while(blockId < FilesHelper.getTotalBlocksInDatafile())

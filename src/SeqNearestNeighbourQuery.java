@@ -2,16 +2,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.PriorityQueue;
-
-// Class used for executing a k-nearest neighbors query of a specific search point without any use of an index.
-// Finds the k closest records to that search point.
+/**
+ * The SeqNearestNeighbourQuery class is used for executing a k-nearest neighbors query of a specific search point
+ * without the use of an index. It finds the k closest records to the search point.
+ *
+ * @author Akompian Georgios
+ */
 class SeqNearestNeighbourQuery extends SeqScanQuery {
     private ArrayList<Double> searchPoint; // The point for which nearest neighbors are sought.
     private int k; // The number of nearest neighbors to find.
     private PriorityQueue<IdDistancePair> nearestNeighbours; // Priority queue to store the nearest neighbors.
 
-    // Constructor for SequentialNearestNeighboursQuery.
-    SeqNearestNeighbourQuery(ArrayList<Double> searchPoint, int k) {
+    /**
+     * Constructs a SeqNearestNeighbourQuery with the given search point and the number of nearest neighbors to find.
+     *
+     * @param searchPoint The point for which nearest neighbors are sought.
+     * @param k           The number of nearest neighbors to find.
+     * @throws IllegalArgumentException If k is not a positive integer.
+     */
+    SeqNearestNeighbourQuery(ArrayList<Double> searchPoint, int k) throws IllegalArgumentException {
         if (k < 0)
             throw new IllegalArgumentException("Parameter 'k' for the nearest neighbors must be a positive integer.");
         this.searchPoint = searchPoint;
@@ -27,7 +36,11 @@ class SeqNearestNeighbourQuery extends SeqScanQuery {
         });
     }
 
-    // Returns the IDs of the query's records, sorted by distance from the search point.
+    /**
+     * Returns the IDs of the query's records, sorted by distance from the search point.
+     *
+     * @return The IDs of the query's records.
+     */
     @Override
     ArrayList<Long> getQueryRecordIds() {
         ArrayList<Long> qualifyingRecordIds = new ArrayList<>();
@@ -44,7 +57,10 @@ class SeqNearestNeighbourQuery extends SeqScanQuery {
         return qualifyingRecordIds;
     }
 
-    // Method to find the k-nearest neighbors.
+
+    /**  Method to find the k-nearest neighbors.
+     *
+     */
     private void findNeighbours() {
         int blockId = 1;
         while (blockId < FilesHelper.getTotalBlocksInDatafile()) {
