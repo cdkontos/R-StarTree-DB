@@ -1,44 +1,37 @@
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class SkylineQuery{
+// Class for skyline queries execution with the use of the RStarTree
+class SkylineQuery extends Query {
+    private ArrayList<Double> queryPoint; // The query point for skyline computation
 
-    public static List<Record> findSkyline(RStarTree rStarTree) {
-        Node rootNode = rStarTree.getRoot();
-        Map<Long, Record> recordMap = new HashMap<>(); // Create a map to associate record IDs with records
-        Map<Long, Node> nodeMap = new HashMap<>(); // Create a map to associate node IDs with nodes
-        return findSkyline(rootNode, new ArrayList<>(), recordMap, nodeMap);
+    SkylineQuery(ArrayList<Double> queryPoint) {
+        this.queryPoint = queryPoint;
     }
 
-    private static List<Record> findSkyline(Node node, List<Record> currentSkyline, Map<Long, Record> recordMap, Map<Long, Node> nodeMap) {
+    @Override
+    ArrayList<Long> getQueryRecordIds(Node node) {
+        ArrayList<Long> skylineRecords = new ArrayList<>();
+        getSkyline(node, skylineRecords);
+        return skylineRecords;
+    }
+
+    // Recursive method to find skyline records in the RStarTree
+    private void getSkyline(Node node, ArrayList<Long> skylineRecords) {
         if (node.isLeaf()) {
+            // Leaf node, check each entry against the query point
             for (Entry entry : node.getEntries()) {
-                Record record = entry.getRecord(recordMap); // Pass the record map to get the associated record
-                if (isSkyline(record, currentSkyline)) {
-                    currentSkyline.add(record);
+                if (entry.isSkyline(queryPoint)) {
+                    skylineRecords.add(entry.getRecordId());
                 }
             }
         } else {
+            // Non-leaf node, recursively visit child nodes
             for (Entry entry : node.getEntries()) {
-                Long childNodeBlockID = entry.getChildNodeBlockID();
-                Node childNode = nodeMap.get(childNodeBlockID); // Retrieve the child node from the node map
-                if (childNode != null) {
-                    findSkyline(childNode, currentSkyline, recordMap, nodeMap); // Pass the record map and node map recursively
+                Node childNode = FilesHelper.readIndexFileBlock(entry.getChildNodeBlockID());
+                if (childNode != null && entry.isSkyline(queryPoint)) {
+                    getSkyline(childNode, skylineRecords);
                 }
             }
         }
-        return currentSkyline;
     }
-
-    private static boolean isSkyline(Record record, List<Record> skyline) {
-        for (Record skylineRecord : skyline) {
-            if (record.dominates(skylineRecord)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }

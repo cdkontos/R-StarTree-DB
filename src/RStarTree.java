@@ -254,13 +254,10 @@ public class RStarTree {
         Query query = new NearestNeighbourQuery(searchPoint,k);
         return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
     }
-/*
-    ArrayList<Record> getSkyline()
-    {
-        SkylineQuery.findSkyline()
-
+    ArrayList<Long> getSkyline(ArrayList<Double> queryPoint) {
+        Query query = new SkylineQuery(queryPoint);
+        return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
     }
-*/
     private void deleteRecord(Record record, long datafileBlockId, Node node)
     {
         ArrayList<Bounds> dimensionBounds = new ArrayList<>();

@@ -126,7 +126,7 @@ class UserInterface {
                     case "2":
                         // Range query within a given circle
                         System.out.println("Skyline selected");
-                        System.out.println("Give the coordinate of each axis that the circle's center is (input example for each dimension : 33.4)");
+
                         ArrayList<Double> point = new ArrayList<>(); // The circle's center
                         for (int i = 0; i < FilesHelper.getDataDimensions(); i++) {
                             int dim = i + 1;
@@ -135,20 +135,14 @@ class UserInterface {
                             System.out.println();
                             point.add(coordinate);
                         }
-
-                        double radius;
-                        while (true) {
-                            System.out.print("Give the radius of the circle: ");
-                            radius = scan.nextDouble();
-                            System.out.println();
-                            if (radius > 0)
-                                break;
-                            else
-                                System.out.println("Radius of the circle must be a positive number");
-
-
-
-                        }
+                        System.out.println("Skyline Query");
+                        long startSkyTime = System.nanoTime();
+                        queryRecords = rStarTree.getSkyline(point);
+                        long stopSkyTime = System.nanoTime();
+                        for (Long id : queryRecords)
+                            System.out.print(id + ", ");
+                        System.out.println();
+                        System.out.println("Time taken for KNN using R star tree: " + (double) (stopSkyTime - startSkyTime) / 1000000 + " ms");
                     case "3":
                         // KNN Query
                         System.out.println("K-NN query selected");

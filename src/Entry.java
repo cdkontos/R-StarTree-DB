@@ -60,4 +60,27 @@ public class Entry implements Serializable {
             return null;
         }
     }
+
+    public boolean isSkyline(ArrayList<Double> queryPoint) {
+        if (boundingBox == null) {
+            // Entry does not have a bounding box, cannot determine skyline status
+            return false;
+        }
+
+        // Assume that lower values are preferred (minimization)
+        boolean dominates = true;
+
+        for (int i = 0; i < queryPoint.size(); i++) {
+            double queryValue = queryPoint.get(i);
+            double entryValue = boundingBox.getCenter().get(i); // Assuming boundingBox has a getCenter method
+
+            if (entryValue > queryValue) {
+                // Entry is worse in at least one dimension, it does not dominate the query point
+                dominates = false;
+                break;
+            }
+        }
+
+        return dominates;
+    }
 }
