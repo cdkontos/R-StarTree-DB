@@ -139,17 +139,18 @@ class UserInterface {
                         // Range query within a given circle
                         System.out.println("Skyline selected");
 
-                        ArrayList<Double> point = new ArrayList<>(); // The circle's center
+                       /* ArrayList<Double> point = new ArrayList<>(); // The circle's center
                         for (int i = 0; i < FilesHelper.getDataDimensions(); i++) {
                             int dim = i + 1;
                             System.out.print("Give the coordinate of the circle's center in dimension " + dim + ": ");
                             double coordinate = scan.nextDouble();
                             System.out.println();
                             point.add(coordinate);
-                        }
+                        }*/
                         System.out.println("Skyline Query");
                         long startSkyTime = System.nanoTime();
-                        queryRecords = rStarTree.getSkyline(point);
+                        queryRecords = rStarTree.getSkyline();
+                        //queryRecords = rStarTree.getSkyline(point);
                         long stopSkyTime = System.nanoTime();
                         for (Long id : queryRecords)
                             System.out.print(id + ", ");
@@ -159,7 +160,7 @@ class UserInterface {
                         // KNN Query
                         System.out.println("K-NN query selected");
                         System.out.println("Give the coordinate of each axis that the reference point's center is (input example for each dimension : 33.4)");
-                        point = new ArrayList<>(); // The point's center
+                        ArrayList<Double> point = new ArrayList<>(); // The point's center
                         for (int i = 0; i < FilesHelper.getDataDimensions(); i++) {
                             int dim = i + 1;
                             System.out.print("Give the coordinate of the reference point's center in dimension " + dim + ": ");

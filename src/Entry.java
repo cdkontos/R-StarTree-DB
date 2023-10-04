@@ -131,7 +131,7 @@ public class Entry implements Serializable {
 
         for (int i = 0; i < queryPoint.size(); i++) {
             double queryValue = queryPoint.get(i);
-            double entryValue = boundingBox.getCenter().get(i); // Assuming boundingBox has a getCenter method
+            double entryValue = boundingBox.getCenter().get(i);
 
             if (entryValue > queryValue) {
                 // Entry is worse in at least one dimension, it does not dominate the query point
@@ -141,5 +141,37 @@ public class Entry implements Serializable {
         }
 
         return dominates;
+    }
+    /**
+     * Checks if this entry dominates another entry
+     * @param otherEntry the other entry that will be used for the comparison
+     * @return True if the entry dominates the other entry, false otherwise.
+     */
+
+    public boolean dominates(Entry otherEntry) {
+        if (boundingBox == null || otherEntry == null) {
+            // Entries without bounding boxes cannot dominate
+            return false;
+        }
+
+        ArrayList<Double> thisCenter = boundingBox.getCenter();
+        ArrayList<Double> otherCenter = otherEntry.boundingBox.getCenter();
+
+        boolean dominatesInAllDimensions = true;
+        boolean equalsInAnyDimension = false;
+
+        for (int i = 0; i < thisCenter.size(); i++) {
+            double thisValue = thisCenter.get(i);
+            double otherValue = otherCenter.get(i);
+
+            // This entry is equal in this dimension
+            if (thisValue < otherValue) {
+                equalsInAnyDimension = false; // This entry is worse in this dimension
+                dominatesInAllDimensions = false;
+                break;
+            } else equalsInAnyDimension = !(thisValue > otherValue); // This entry is better in this dimension
+        }
+
+        return equalsInAnyDimension || dominatesInAllDimensions;
     }
 }

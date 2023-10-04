@@ -372,11 +372,11 @@ public class RStarTree {
     /**
      * Query which returns the skyline of the points given.
      * NOT IMPLEMENTED
-     * @param queryPoint the points from which we want to find the skyline.
+     * //@param queryPoint the points from which we want to find the skyline.
      * @return the ids of the records that form the skyline.
      */
-    ArrayList<Long> getSkyline(ArrayList<Double> queryPoint) {
-        Query query = new SkylineQuery(queryPoint);
+    ArrayList<Long> getSkyline() {
+        Query query = new SkylineQuery();
         return query.getQueryRecordIds(FilesHelper.readIndexFileBlock(ROOT_NODE_BLOCK_ID));
     }
 
