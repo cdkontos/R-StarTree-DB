@@ -169,9 +169,12 @@ public class Entry implements Serializable {
                 equalsInAnyDimension = false; // This entry is worse in this dimension
                 dominatesInAllDimensions = false;
                 break;
-            } else equalsInAnyDimension = !(thisValue > otherValue); // This entry is better in this dimension
+            } else if (thisValue > otherValue) {
+                equalsInAnyDimension = true; // This entry is better in this dimension
+            }
         }
 
         return equalsInAnyDimension || dominatesInAllDimensions;
     }
+
 }
